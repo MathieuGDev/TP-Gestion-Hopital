@@ -1,0 +1,16 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+
+## Base de données SQLite
+*.db
+*.db-shm
+*.db-wal
+
+## VS Code (optionnel — à garder si tu veux partager la config)
+# .vscode/
+
+## Secrets / config locale
+appsettings.Development.json
