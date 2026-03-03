@@ -25,5 +25,5 @@ public class Doctor
 
     // clé étrangère vers le model Department
     public int DepartmentId { get; set; }
-    public Department Department { get; set; } = null!;
+    public Department? Department { get; set; }
 }

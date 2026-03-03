@@ -65,6 +65,33 @@ public class HospitalDbContext : DbContext
         modelBuilder.Entity<Models.Consultation>()
             .HasIndex(c => new { c.PatientId, c.DoctorId, c.AppointmentDate })
             .IsUnique();
+
+        // Seeders
+
+        modelBuilder.Entity<Models.Department>().HasData(
+            new Models.Department { Id = 1, Name = "Cardiologie" },
+            new Models.Department { Id = 2, Name = "Urgences" },
+            new Models.Department { Id = 3, Name = "Pediatrie" }
+        );
+
+        modelBuilder.Entity<Models.Doctor>().HasData(
+            new Models.Doctor { Id = 1, FirstName = "Sophie",  LastName = "Martin",  Specialty = "Cardiologie",       LicenseNumber = "LIC-0001", DepartmentId = 1 },
+            new Models.Doctor { Id = 2, FirstName = "Lucas",   LastName = "Bernard", Specialty = "Medecine generale", LicenseNumber = "LIC-0002", DepartmentId = 2 },
+            new Models.Doctor { Id = 3, FirstName = "Emma",    LastName = "Dubois",  Specialty = "Pediatrie",         LicenseNumber = "LIC-0003", DepartmentId = 3 }
+        );
+
+        modelBuilder.Entity<Models.Patient>().HasData(
+            new Models.Patient { Id = 1, FolderNumber = 1001, FirstName = "Jean",   LastName = "Dupont", DateOfBirth = new DateTime(1985, 4,  12), Address = "12 rue de la Paix, Paris",           Email = "jean.dupont@email.com"  },
+            new Models.Patient { Id = 2, FolderNumber = 1002, FirstName = "Marie",  LastName = "Curie",  DateOfBirth = new DateTime(1990, 11, 7),  Address = "3 avenue des Sciences, Lyon",         Email = "marie.curie@email.com"  },
+            new Models.Patient { Id = 3, FolderNumber = 1003, FirstName = "Thomas", LastName = "Leroy",  DateOfBirth = new DateTime(2000, 6,  25), Address = "8 boulevard Victor Hugo, Marseille",  Email = "thomas.leroy@email.com" }
+        );
+
+        modelBuilder.Entity<Models.Consultation>().HasData(
+            new Models.Consultation { Id = 1, PatientId = 1, DoctorId = 1, AppointmentDate = new DateTime(2026, 2, 21, 10, 0, 0), Status = Models.ConsultationStatus.Completed, Notes = "Bilan cardiaque annuel, RAS."    },
+            new Models.Consultation { Id = 2, PatientId = 2, DoctorId = 2, AppointmentDate = new DateTime(2026, 3, 3,  10, 0, 0), Status = Models.ConsultationStatus.Scheduled, Notes = "Consultation fievre."            },
+            new Models.Consultation { Id = 3, PatientId = 3, DoctorId = 3, AppointmentDate = new DateTime(2026, 3, 8,  14, 0, 0), Status = Models.ConsultationStatus.Scheduled, Notes = "Suivi pediatrique."              },
+            new Models.Consultation { Id = 4, PatientId = 1, DoctorId = 2, AppointmentDate = new DateTime(2026, 3, 6,  9,  0, 0), Status = Models.ConsultationStatus.Scheduled, Notes = "Controle tension arterielle."    }
+        );
     }
 
 }

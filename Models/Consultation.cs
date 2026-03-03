@@ -10,11 +10,11 @@ public class Consultation
 
     // Relation vers Patient
     public int PatientId { get; set; }
-    public Patient Patient { get; set; } = null!;
+    public Patient? Patient { get; set; }
 
     // Relation vers Doctor
     public int DoctorId { get; set; }
-    public Doctor Doctor { get; set; } = null!;
+    public Doctor? Doctor { get; set; }
 
     [Required]
     public DateTime AppointmentDate { get; set; }
@@ -26,8 +26,8 @@ public class Consultation
 
 public enum ConsultationStatus
 {
-    Scheduled,
-    InProgress,
-    Completed,
-    Cancelled
+    Scheduled = 0,
+    InProgress = 1,
+    Completed = 2,
+    Cancelled = 3
 }
