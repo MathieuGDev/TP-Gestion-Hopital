@@ -1,0 +1,93 @@
+@model tp_hospital.Models.Patient
+
+@{
+    ViewData["Title"] = $"Fiche patient – {Model.FirstName} {Model.LastName}";
+    var statusLabels = new Dictionary<tp_hospital.Models.ConsultationStatus, (string css, string label)>
+    {
+        [tp_hospital.Models.ConsultationStatus.Scheduled]   = ("bg-primary",   "Planifiée"),
+        [tp_hospital.Models.ConsultationStatus.InProgress]  = ("bg-warning text-dark", "En cours"),
+        [tp_hospital.Models.ConsultationStatus.Completed]   = ("bg-success",   "Terminée"),
+        [tp_hospital.Models.ConsultationStatus.Cancelled]   = ("bg-secondary", "Annulée"),
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">👤 Fiche patient</h1>
+    <a asp-controller="Dashboard" asp-action="Patients" class="btn btn-outline-secondary btn-sm">← Liste des patients</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">@Model.FirstName @Model.LastName</h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-sm-6 col-lg-3">
+                <div class="text-muted small">N° dossier</div>
+                <div class="fw-semibold">#@Model.FolderNumber</div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="text-muted small">Date de naissance</div>
+                <div class="fw-semibold">@Model.DateOfBirth.ToString("dd/MM/yyyy")</div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="text-muted small">Email</div>
+                <div class="fw-semibold">@Model.Email</div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="text-muted small">Adresse</div>
+                <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Address) ? "—" : Model.Address)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Consultations</h5>
+        <span class="badge bg-primary rounded-pill">@Model.Consultations.Count</span>
+    </div>
+    @if (Model.Consultations.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Médecin</th>
+                        <th>Département</th>
+                        <th>Statut</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.Consultations)
+                    {
+                        var (css, label) = statusLabels[c.Status];
+                        <tr>
+                            <td>@c.AppointmentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                @if (c.Doctor != null)
+                                {
+                                    <a asp-controller="Dashboard" asp-action="DoctorDetail" asp-route-id="@c.DoctorId"
+                                       class="text-decoration-none fw-semibold">
+                                        Dr @c.Doctor.FirstName @c.Doctor.LastName
+                                    </a>
+                                }
+                            </td>
+                            <td class="text-muted small">@(c.Doctor?.Department?.Name ?? "—")</td>
+                            <td><span class="badge @css">@label</span></td>
+                            <td class="text-muted small">@(string.IsNullOrWhiteSpace(c.Notes) ? "—" : c.Notes)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="card-body">
+            <p class="text-muted mb-0">Aucune consultation enregistrée pour ce patient.</p>
+        </div>
+    }
+</div>

@@ -124,7 +124,7 @@ namespace tp_hospital.Controllers
                     c.AppointmentDate,
                     c.Status,
                     c.Notes,
-                    Doctor = new { c.Doctor.Id, c.Doctor.FirstName, c.Doctor.LastName, c.Doctor.Specialty }
+                    Doctor = new { c.Doctor!.Id, c.Doctor.FirstName, c.Doctor.LastName, c.Doctor.Specialty }
                 })
                 .ToListAsync();
 
@@ -163,7 +163,7 @@ namespace tp_hospital.Controllers
                     c.AppointmentDate,
                     c.Status,
                     c.Notes,
-                    Patient = new { c.Patient.Id, c.Patient.FirstName, c.Patient.LastName, c.Patient.FolderNumber }
+                    Patient = new { c.Patient!.Id, c.Patient.FirstName, c.Patient.LastName, c.Patient.FolderNumber }
                 })
                 .ToListAsync();
 

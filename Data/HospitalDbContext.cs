@@ -50,14 +50,14 @@ public class HospitalDbContext : DbContext
         // Relation Consultation -> Patient (un patient peut avoir plusieurs consultations)
         modelBuilder.Entity<Models.Consultation>()
             .HasOne(c => c.Patient)
-            .WithMany()
+            .WithMany(p => p.Consultations)
             .HasForeignKey(c => c.PatientId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Relation Consultation -> Doctor (un médecin peut avoir plusieurs consultations)
         modelBuilder.Entity<Models.Consultation>()
             .HasOne(c => c.Doctor)
-            .WithMany()
+            .WithMany(d => d.Consultations)
             .HasForeignKey(c => c.DoctorId)
             .OnDelete(DeleteBehavior.Restrict);
 
@@ -69,9 +69,9 @@ public class HospitalDbContext : DbContext
         // Seeders
 
         modelBuilder.Entity<Models.Department>().HasData(
-            new Models.Department { Id = 1, Name = "Cardiologie" },
-            new Models.Department { Id = 2, Name = "Urgences" },
-            new Models.Department { Id = 3, Name = "Pediatrie" }
+            new Models.Department { Id = 1, HeadDoctorId = 1, Name = "Cardiologie" },
+            new Models.Department { Id = 2, HeadDoctorId = 2, Name = "Urgences" },
+            new Models.Department { Id = 3, HeadDoctorId = 3, Name = "Pediatrie" }
         );
 
         modelBuilder.Entity<Models.Doctor>().HasData(

@@ -1,0 +1,70 @@
+@model IEnumerable<tp_hospital.Models.Patient>
+
+@{
+    ViewData["Title"] = "Patients";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">👤 Patients <span class="badge bg-secondary fs-6">@Model.Count()</span></h1>
+    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary btn-sm">← Tableau de bord</a>
+</div>
+
+<div class="mb-3">
+    <input id="searchInput" type="text" class="form-control" placeholder="Rechercher par nom, prénom ou dossier…" />
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="patientsTable">
+            <thead class="table-light">
+                <tr>
+                    <th>N° dossier</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Date de naissance</th>
+                    <th>Email</th>
+                    <th class="text-center">Consultations</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in Model)
+                {
+                    <tr style="cursor:pointer"
+                        onclick="window.location='@Url.Action("PatientDetail","Dashboard",new{id=patient.Id})'">
+                        <td><span class="badge bg-light text-dark border">@patient.FolderNumber</span></td>
+                        <td class="fw-semibold">@patient.LastName</td>
+                        <td>@patient.FirstName</td>
+                        <td>@patient.DateOfBirth.ToString("dd/MM/yyyy")</td>
+                        <td class="text-muted small">@patient.Email</td>
+                        <td class="text-center">
+                            <span class="badge bg-primary rounded-pill">@patient.Consultations.Count</span>
+                        </td>
+                        <td class="text-end">
+                            <a asp-controller="Dashboard" asp-action="PatientDetail" asp-route-id="@patient.Id"
+                               class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation()">
+                                Voir la fiche
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-3">Aucun patient enregistré.</div>
+}
+
+@section Scripts {
+<script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const filter = this.value.toLowerCase();
+        document.querySelectorAll('#patientsTable tbody tr').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+        });
+    });
+</script>
+}

@@ -27,4 +27,6 @@ public class Patient
     [Required]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
+
+    public ICollection<Consultation> Consultations { get; set; } = new List<Consultation>();
 }

@@ -1,0 +1,124 @@
+@{
+    ViewData["Title"] = "Tableau de bord";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2"><i class="bi bi-hospital"></i> Tableau de bord</h1>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="text-primary" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="fs-1 fw-bold text-primary">@ViewBag.PatientCount</div>
+                    <div class="text-muted small">Patients</div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="Dashboard" asp-action="Patients" class="btn btn-sm btn-outline-primary w-100">Voir tous les patients</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="text-success" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6M8 9a5 5 0 0 0-4.546 2.916A5.986 5.986 0 0 0 8 14a5.986 5.986 0 0 0 4.546-2.084A5 5 0 0 0 8 9"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="fs-1 fw-bold text-success">@ViewBag.DoctorCount</div>
+                    <div class="text-muted small">Médecins</div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="Dashboard" asp-action="Doctors" class="btn btn-sm btn-outline-success w-100">Voir tous les médecins</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="text-warning" viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="fs-1 fw-bold text-warning">@ViewBag.ConsultationCount</div>
+                    <div class="text-muted small">Consultations</div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="Dashboard" asp-action="DepartmentStats" class="btn btn-sm btn-outline-warning w-100">Stats départements</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="text-info" viewBox="0 0 16 16">
+                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="fs-1 fw-bold text-info">@ViewBag.UpcomingCount</div>
+                    <div class="text-muted small">À venir</div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <span class="btn btn-sm btn-outline-info w-100 disabled">Consultations planifiées</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <a asp-controller="Dashboard" asp-action="Patients" class="text-decoration-none">
+            <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="card-body text-center py-4">
+                    <h5 class="card-title">Patients</h5>
+                    <p class="card-text text-muted small">Consulter la liste des patients et leur fiche détaillée</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="Dashboard" asp-action="Doctors" class="text-decoration-none">
+            <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="card-body text-center py-4">
+                    <h5 class="card-title">Médecins</h5>
+                    <p class="card-text text-muted small">Voir le planning et les consultations à venir des médecins</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="Dashboard" asp-action="DepartmentStats" class="text-decoration-none">
+            <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="card-body text-center py-4">
+                    <h5 class="card-title">Statistiques</h5>
+                    <p class="card-text text-muted small">Statistiques par département : médecins &amp; consultations</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+.hover-card { transition: transform .15s, box-shadow .15s; }
+.hover-card:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.12) !important; }
+</style>

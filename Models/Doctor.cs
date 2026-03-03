@@ -26,4 +26,6 @@ public class Doctor
     // clé étrangère vers le model Department
     public int DepartmentId { get; set; }
     public Department? Department { get; set; }
+
+    public ICollection<Consultation> Consultations { get; set; } = new List<Consultation>();
 }
