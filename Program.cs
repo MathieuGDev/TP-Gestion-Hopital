@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using tp_hospital.Data;
+using tp_hospital.Repositories;
+using tp_hospital.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,15 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<HospitalDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
+// Repository pattern + Unit of Work
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
+
+// Service layer (logique metier)
+builder.Services.AddScoped<PatientService>();
+builder.Services.AddScoped<ConsultationService>();
 
 var app = builder.Build();
 
