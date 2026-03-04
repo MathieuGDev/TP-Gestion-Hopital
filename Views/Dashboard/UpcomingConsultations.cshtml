@@ -1,0 +1,90 @@
+@model IEnumerable<tp_hospital.Models.Consultation>
+
+@{
+    ViewData["Title"] = "Consultations planifiées";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">🕐 Consultations planifiées <span class="badge bg-info text-dark fs-6">@Model.Count()</span></h1>
+    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary btn-sm">← Tableau de bord</a>
+</div>
+
+<div class="mb-3">
+    <input id="searchInput" type="text" class="form-control" placeholder="Rechercher par patient, médecin ou département…" />
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="consultationsTable">
+            <thead class="table-light">
+                <tr>
+                    <th>Date &amp; heure</th>
+                    <th>Patient</th>
+                    <th>Médecin</th>
+                    <th>Département</th>
+                    <th>Notes</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@c.AppointmentDate.ToString("dd/MM/yyyy")</strong>
+                            <span class="text-muted ms-1">@c.AppointmentDate.ToString("HH:mm")</span>
+                        </td>
+                        <td>
+                            @if (c.Patient != null)
+                            {
+                                <a asp-controller="Dashboard" asp-action="PatientDetail" asp-route-id="@c.PatientId"
+                                   class="text-decoration-none fw-semibold">
+                                    @c.Patient.FirstName @c.Patient.LastName
+                                </a>
+                                <br />
+                                <span class="text-muted small">Dossier #@c.Patient.FolderNumber</span>
+                            }
+                        </td>
+                        <td>
+                            @if (c.Doctor != null)
+                            {
+                                <a asp-controller="Dashboard" asp-action="DoctorDetail" asp-route-id="@c.DoctorId"
+                                   class="text-decoration-none fw-semibold">
+                                    Dr @c.Doctor.FirstName @c.Doctor.LastName
+                                </a>
+                                <br />
+                                <span class="text-muted small">@c.Doctor.Specialty</span>
+                            }
+                        </td>
+                        <td>
+                            @if (c.Doctor?.Department != null)
+                            {
+                                <span class="badge bg-info text-dark">@c.Doctor.Department.Name</span>
+                            }
+                        </td>
+                        <td class="text-muted small">@(string.IsNullOrWhiteSpace(c.Notes) ? "—" : c.Notes)</td>
+                        <td class="text-end">
+                            <span class="badge bg-primary">Planifiée</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-3">Aucune consultation planifiée.</div>
+}
+
+@section Scripts {
+<script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const filter = this.value.toLowerCase();
+        document.querySelectorAll('#consultationsTable tbody tr').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+        });
+    });
+</script>
+}

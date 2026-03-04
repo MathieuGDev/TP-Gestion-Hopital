@@ -30,7 +30,7 @@ public class DashboardController : Controller
     // GET /Dashboard/Patients  — liste de tous les patients
     public async Task<IActionResult> Patients()
     {
-        // Eager loading des consultations pour afficher le nombre par patient (1 requête)
+        // Eager loading des consultations pour afficher le nombre par patient
         var patients = await _context.Patients
             .AsNoTracking()
             .Include(p => p.Consultations)
@@ -44,8 +44,6 @@ public class DashboardController : Controller
     // GET /Dashboard/PatientDetail/5  — fiche patient complète
     public async Task<IActionResult> PatientDetail(int id)
     {
-        // Eager loading : patient → consultations → docteur → département
-        // Évite le problème N+1 : une seule requête SQL avec JOINs
         var patient = await _context.Patients
             .AsNoTracking()
             .Include(p => p.Consultations.OrderByDescending(c => c.AppointmentDate))
@@ -62,7 +60,6 @@ public class DashboardController : Controller
     // GET /Dashboard/Doctors  — liste de tous les médecins
     public async Task<IActionResult> Doctors()
     {
-        // Eager loading doctor → department en une seule requête
         var doctors = await _context.Doctors
             .AsNoTracking()
             .Include(d => d.Department)
@@ -77,7 +74,6 @@ public class DashboardController : Controller
     // GET /Dashboard/DoctorDetail/5  — planning médecin (consultations à venir)
     public async Task<IActionResult> DoctorDetail(int id)
     {
-        // Filtrage directement dans le Include (EF Core 5+) → une seule requête
         var doctor = await _context.Doctors
             .AsNoTracking()
             .Include(d => d.Department)
@@ -97,7 +93,6 @@ public class DashboardController : Controller
     // GET /Dashboard/DepartmentStats  — statistiques par département
     public async Task<IActionResult> DepartmentStats()
     {
-        // Projection pour éviter de charger des données inutiles
         var stats = await _context.Departments
             .AsNoTracking()
             .Select(dep => new DepartmentStatViewModel
@@ -119,9 +114,24 @@ public class DashboardController : Controller
 
         return View(stats);
     }
+
+    // GET /Dashboard/UpcomingConsultations — toutes les consultations planifiées
+    public async Task<IActionResult> UpcomingConsultations()
+    {
+        var consultations = await _context.Consultations
+            .AsNoTracking()
+            .Where(c => c.AppointmentDate >= DateTime.Today
+                     && c.Status == ConsultationStatus.Scheduled)
+            .Include(c => c.Patient)
+            .Include(c => c.Doctor)
+                .ThenInclude(d => d!.Department)
+            .OrderBy(c => c.AppointmentDate)
+            .ToListAsync();
+
+        return View(consultations);
+    }
 }
 
-// ViewModel léger utilisé pour les statistiques départements (projection EF Core)
 public class DepartmentStatViewModel
 {
     public int    DepartmentId       { get; set; }

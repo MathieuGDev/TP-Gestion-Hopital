@@ -22,7 +22,7 @@ public class Patient
     [DateInPast]
     public DateTime DateOfBirth { get; set; }
 
-    public string Address { get; set; } = string.Empty;
+    public Address? Address { get; set; }
 
     [Required]
     [EmailAddress]

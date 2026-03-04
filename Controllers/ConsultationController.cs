@@ -32,7 +32,7 @@ namespace tp_hospital.Controllers
             if (!doctorExists)
                 return NotFound(new { message = $"Aucun medecin trouve avec l'ID {consultation.DoctorId}." });
 
-            // Contrainte : pas deux consultations au meme moment pour le meme patient avec le meme medecin
+            // Pas deux consultations au meme moment pour le meme patient avec le meme medecin
             bool conflict = await _context.Consultations
                 .AsNoTracking()
                 .AnyAsync(c => c.PatientId == consultation.PatientId
@@ -46,7 +46,6 @@ namespace tp_hospital.Controllers
             _context.Consultations.Add(consultation);
             await _context.SaveChangesAsync();
 
-            // Recharge la consultation avec les données liées pour la réponse
             var result = await _context.Consultations
                 .Include(c => c.Patient)
                 .Include(c => c.Doctor)

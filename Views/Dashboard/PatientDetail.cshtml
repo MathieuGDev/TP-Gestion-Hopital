@@ -36,7 +36,7 @@
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="text-muted small">Adresse</div>
-                <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Address) ? "—" : Model.Address)</div>
+                <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Address?.Street) ? "—" : Model.Address!.ToString())</div>
             </div>
         </div>
     </div>
