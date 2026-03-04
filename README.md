@@ -13,10 +13,7 @@ Application web ASP.NET Core MVC de gestion hospitalière
 
 ---
 
-## Prérequis
-
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [dotnet-ef (CLI EF Core)](https://learn.microsoft.com/en-us/ef/core/cli/dotnet) — Pour les migrations
+## Installer dotnet ef
 
 ```bash
 dotnet tool install --global dotnet-ef
@@ -79,12 +76,11 @@ tp_hospital/
 - Navigation vers tous les modules
 
 ### Patients (`/Dashboard/Patients`)
-- Liste de tous les patients avec recherche instantanée
+- Liste de tous les patients
 - Clic sur une ligne → fiche complète avec toutes les consultations et les médecins associés
 
 ### Médecins (`/Dashboard/Doctors`)
 - Liste de tous les médecins avec leur département
-- Clic sur une ligne → planning avec les consultations à venir uniquement
 
 ### Consultations planifiées (`/Dashboard/UpcomingConsultations`)
 - Tableau de toutes les consultations avec statut `Scheduled` à partir d'aujourd'hui
@@ -92,7 +88,6 @@ tp_hospital/
 
 ### Statistiques départements (`/Dashboard/DepartmentStats`)
 - Nombre de médecins et de consultations par département
-- Taux de consultations à venir (barre de progression)
 
 ---
 
@@ -101,10 +96,17 @@ tp_hospital/
 | Méthode | Route | Description |
 |---|---|---|
 | `GET` | `/api/patient` | Liste paginée des patients |
+| `GET` | `/api/patient/{id}` | Fiche patient + consultations |
 | `GET` | `/api/patient/search?name=...` | Recherche par nom |
 | `POST` | `/api/patient` | Créer un patient |
 | `PUT` | `/api/patient/{id}` | Modifier un patient |
 | `DELETE` | `/api/patient/{id}` | Supprimer un patient |
+| `GET` | `/api/doctor` | Liste paginée des médecins |
+| `GET` | `/api/doctor/{id}` | Fiche médecin + consultations |
+| `GET` | `/api/doctor/search?name=...` | Recherche par nom ou spécialité |
+| `POST` | `/api/doctor` | Créer un médecin |
+| `PUT` | `/api/doctor/{id}` | Modifier un médecin |
+| `DELETE` | `/api/doctor/{id}` | Supprimer un médecin |
 | `POST` | `/api/consultation` | Planifier une consultation |
 | `PUT` | `/api/consultation/{id}/status` | Modifier le statut |
 | `DELETE` | `/api/consultation/{id}` | Annuler une consultation |

@@ -27,16 +27,29 @@ public class DashboardController : Controller
         return View();
     }
 
-    // GET /Dashboard/Patients  — liste de tous les patients
-    public async Task<IActionResult> Patients()
+    // GET /Dashboard/Patients  — liste paginée des patients (5 par page)
+    public async Task<IActionResult> Patients(int page = 1)
     {
-        // Eager loading des consultations pour afficher le nombre par patient
-        var patients = await _context.Patients
+        const int pageSize = 5;
+
+        var query = _context.Patients
             .AsNoTracking()
             .Include(p => p.Consultations)
             .OrderBy(p => p.LastName)
-            .ThenBy(p => p.FirstName)
+            .ThenBy(p => p.FirstName);
+
+        int total = await query.CountAsync();
+        int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+        page = Math.Clamp(page, 1, Math.Max(1, totalPages));
+
+        var patients = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages  = totalPages;
+        ViewBag.TotalCount  = total;
 
         return View(patients);
     }
@@ -57,16 +70,30 @@ public class DashboardController : Controller
         return View(patient);
     }
 
-    // GET /Dashboard/Doctors  — liste de tous les médecins
-    public async Task<IActionResult> Doctors()
+    // GET /Dashboard/Doctors  — liste paginée des médecins (5 par page)
+    public async Task<IActionResult> Doctors(int page = 1)
     {
-        var doctors = await _context.Doctors
+        const int pageSize = 5;
+
+        var query = _context.Doctors
             .AsNoTracking()
             .Include(d => d.Department)
             .Include(d => d.Consultations)
             .OrderBy(d => d.LastName)
-            .ThenBy(d => d.FirstName)
+            .ThenBy(d => d.FirstName);
+
+        int total = await query.CountAsync();
+        int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+        page = Math.Clamp(page, 1, Math.Max(1, totalPages));
+
+        var doctors = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages  = totalPages;
+        ViewBag.TotalCount  = total;
 
         return View(doctors);
     }

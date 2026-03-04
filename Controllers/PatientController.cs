@@ -39,6 +39,46 @@ namespace tp_hospital.Controllers
             return Ok(new { total, page, pageSize, data = patients });
         }
 
+        // GET api/patient/{id}
+        // Récupère un patient par son ID avec toutes ses consultations
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetPatient(int id)
+        {
+            var patient = await _context.Patients
+                .AsNoTracking()
+                .Include(p => p.Consultations.OrderByDescending(c => c.AppointmentDate))
+                    .ThenInclude(c => c.Doctor)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (patient == null)
+                return NotFound(new { message = $"Aucun patient trouve avec l'ID {id}." });
+
+            return Ok(new
+            {
+                patient.Id,
+                patient.FolderNumber,
+                patient.FirstName,
+                patient.LastName,
+                patient.DateOfBirth,
+                patient.Email,
+                Address = patient.Address == null ? null : new
+                {
+                    patient.Address.Street,
+                    patient.Address.City,
+                    patient.Address.PostalCode,
+                    patient.Address.Country
+                },
+                Consultations = patient.Consultations.Select(c => new
+                {
+                    c.Id,
+                    c.AppointmentDate,
+                    c.Status,
+                    c.Notes,
+                    Doctor = c.Doctor == null ? null : new { c.Doctor.Id, c.Doctor.FirstName, c.Doctor.LastName, c.Doctor.Specialty }
+                })
+            });
+        }
+
         // GET api/patient/search?name=dupont&page=1&pageSize=10
         // Recherche par nom ou prenom
         [HttpGet("search")]
