@@ -37,6 +37,29 @@ public class HospitalDbContext : DbContext
             .HasIndex(d => d.LicenseNumber)
             .IsUnique();
 
+        // Index de performance
+
+        // Recherche rapide par nom de famille
+        modelBuilder.Entity<Models.Patient>()
+            .HasIndex(p => p.LastName);
+
+        // Agenda d'un medecin
+        modelBuilder.Entity<Models.Consultation>()
+            .HasIndex(c => new { c.DoctorId, c.AppointmentDate });
+
+        // Historique d'un patient
+        modelBuilder.Entity<Models.Consultation>()
+            .HasIndex(c => c.PatientId);
+
+        // Comptage de patients par departement
+        modelBuilder.Entity<Models.Doctor>()
+            .HasIndex(d => d.DepartmentId);
+
+        // Conccurency Token
+        modelBuilder.Entity<Models.Patient>()
+            .Property(p => p.RowVersion)
+            .IsConcurrencyToken();
+
 
         modelBuilder.Entity<Models.Patient>()
             .OwnsOne(p => p.Address, a =>

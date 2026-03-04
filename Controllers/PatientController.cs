@@ -162,7 +162,26 @@ namespace tp_hospital.Controllers
             existingPatient.Email        = updatedPatient.Email;
             existingPatient.FolderNumber = updatedPatient.FolderNumber;
 
-            await _context.SaveChangesAsync();
+            // Détection des conflits :
+            // Si la ligne a ete modifiee entre-temps, aucune ligne n'est affectee
+            _context.Entry(existingPatient)
+                .Property(p => p.RowVersion)
+                .OriginalValue = updatedPatient.RowVersion;
+            existingPatient.RowVersion = updatedPatient.RowVersion + 1;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Conflict(new
+                {
+                    message = "Conflit de concurrence : le patient a ete modifie par un autre utilisateur depuis votre derniere lecture. Rechargez les donnees et reessayez.",
+                    currentRowVersion = existingPatient.RowVersion
+                });
+            }
+
             return Ok(existingPatient);
         }
 

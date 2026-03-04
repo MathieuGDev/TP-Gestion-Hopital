@@ -28,5 +28,9 @@ public class Patient
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
 
+    // detecte si un autre utilisateur a sauvegarde entre-temps
+    [ConcurrencyCheck]
+    public uint RowVersion { get; set; } = 0;
+
     public ICollection<Consultation> Consultations { get; set; } = new List<Consultation>();
 }
