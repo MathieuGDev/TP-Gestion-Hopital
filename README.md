@@ -2,6 +2,8 @@
 
 Application web ASP.NET Core MVC de gestion hospitalière
 
+![Preview](preview.png)
+
 ## Stack technique
 
 | Technologie | Version |

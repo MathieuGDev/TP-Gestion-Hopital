@@ -10,7 +10,7 @@ obj/
 *.db-wal
 
 ## VS Code (optionnel — à garder si tu veux partager la config)
-# .vscode/
+.vscode/
 
 ## Secrets / config locale
 appsettings.Development.json
