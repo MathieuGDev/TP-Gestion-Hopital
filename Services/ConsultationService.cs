@@ -39,10 +39,8 @@ public class ConsultationService
         return ServiceResult<Consultation>.Created(consultation);
     }
 
-    /// <summary>
-    /// Change le statut d'une consultation.
-    /// Les transitions invalides sont refusees.
-    /// </summary>
+    // Change le statut d'une consultation.
+    // Les transitions invalides sont refusees.
     public async Task<ServiceResult<Consultation>> UpdateStatusAsync(int id, ConsultationStatus newStatus)
     {
         var consultation = await _uow.Consultations.GetByIdAsync(id);

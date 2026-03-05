@@ -22,7 +22,7 @@ public class ConsultationRepository : IConsultationRepository
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    /// <summary>Verifie si la combinaison (patient, medecin, date) existe deja.</summary>
+    // Verifie si la combinaison (patient, medecin, date) existe deja.
     public async Task<bool> SlotExistsAsync(
         int patientId, int doctorId, DateTime appointmentDate, int? excludeId = null)
     {
@@ -34,7 +34,7 @@ public class ConsultationRepository : IConsultationRepository
                         && (excludeId == null || c.Id != excludeId));
     }
 
-    /// <summary>Verifie si le medecin a deja une consultation a cette date/heure.</summary>
+    // Verifie si le medecin a deja une consultation a cette date/heure.
     public async Task<bool> HasDoctorOverlapAsync(
         int doctorId, DateTime appointmentDate, int? excludeId = null)
     {
