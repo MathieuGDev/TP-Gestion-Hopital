@@ -61,6 +61,7 @@ namespace tp_hospital.Controllers
                 patient.LastName,
                 patient.DateOfBirth,
                 patient.Email,
+                patient.PhoneNumber,
                 Address = patient.Address == null ? null : new
                 {
                     patient.Address.Street,
@@ -87,10 +88,12 @@ namespace tp_hospital.Controllers
             if (string.IsNullOrWhiteSpace(name))
                 return BadRequest(new { message = "Le parametre 'name' est requis." });
 
+            var pattern = $"%{name}%";
+
             var query = _context.Patients
                 .AsNoTracking()
-                .Where(p => p.LastName.ToLower().Contains(name.ToLower())
-                         || p.FirstName.ToLower().Contains(name.ToLower()))
+                .Where(p => EF.Functions.Like(p.LastName, pattern)
+                         || EF.Functions.Like(p.FirstName, pattern))
                 .OrderBy(p => p.LastName)
                 .ThenBy(p => p.FirstName);
 
@@ -126,7 +129,7 @@ namespace tp_hospital.Controllers
             _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(CreatePatient), new { id = patient.Id }, patient);
+            return CreatedAtAction(nameof(GetPatient), new { id = patient.Id }, patient);
         }
 
         // PUT api/patient/{id}
@@ -161,6 +164,7 @@ namespace tp_hospital.Controllers
             existingPatient.Address      = updatedPatient.Address;
             existingPatient.Email        = updatedPatient.Email;
             existingPatient.FolderNumber = updatedPatient.FolderNumber;
+            existingPatient.PhoneNumber  = updatedPatient.PhoneNumber;
 
             // Détection des conflits :
             // Si la ligne a ete modifiee entre-temps, aucune ligne n'est affectee
@@ -175,10 +179,11 @@ namespace tp_hospital.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+                var dbEntry = await _context.Patients.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
                 return Conflict(new
                 {
                     message = "Conflit de concurrence : le patient a ete modifie par un autre utilisateur depuis votre derniere lecture. Rechargez les donnees et reessayez.",
-                    currentRowVersion = existingPatient.RowVersion
+                    currentRowVersion = dbEntry?.RowVersion
                 });
             }
 

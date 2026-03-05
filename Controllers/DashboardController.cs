@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tp_hospital.Data;
 using tp_hospital.Models;
+using DepartmentStatViewModel = tp_hospital.Models.DepartmentStatViewModel;
 
 namespace tp_hospital.Controllers;
 
@@ -59,6 +60,7 @@ public class DashboardController : Controller
     {
         var patient = await _context.Patients
             .AsNoTracking()
+            .Include(p => p.Pathologies)
             .Include(p => p.Consultations.OrderByDescending(c => c.AppointmentDate))
                 .ThenInclude(c => c.Doctor)
                     .ThenInclude(d => d!.Department)
@@ -157,14 +159,4 @@ public class DashboardController : Controller
 
         return View(consultations);
     }
-}
-
-public class DepartmentStatViewModel
-{
-    public int    DepartmentId       { get; set; }
-    public string DepartmentName     { get; set; } = string.Empty;
-    public string HeadDoctorName     { get; set; } = string.Empty;
-    public int    DoctorCount        { get; set; }
-    public int    ConsultationCount  { get; set; }
-    public int    UpcomingCount      { get; set; }
 }

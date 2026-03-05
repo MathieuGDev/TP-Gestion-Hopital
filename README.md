@@ -12,6 +12,11 @@ Application web ASP.NET Core MVC de gestion hospitalière
 | Frontend | Bootstrap 5 |
 
 ---
+## Informations
+
+Réponses aux questions des différentes étapes dans le fichier Reponses.md
+
+---
 
 ## Installer dotnet ef
 

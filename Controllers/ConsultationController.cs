@@ -51,7 +51,32 @@ namespace tp_hospital.Controllers
                 .Include(c => c.Doctor)
                 .FirstAsync(c => c.Id == consultation.Id);
 
-            return CreatedAtAction(nameof(CreateConsultation), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(GetConsultation), new { id = result.Id }, result);
+        }
+
+        // GET api/consultation/{id}
+        // Récupère une consultation par son ID
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult> GetConsultation(int id)
+        {
+            var consultation = await _context.Consultations
+                .AsNoTracking()
+                .Include(c => c.Patient)
+                .Include(c => c.Doctor)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (consultation == null)
+                return NotFound(new { message = $"Aucune consultation trouvee avec l'ID {id}." });
+
+            return Ok(new
+            {
+                consultation.Id,
+                consultation.AppointmentDate,
+                consultation.Status,
+                consultation.Notes,
+                Patient = consultation.Patient == null ? null : new { consultation.Patient.Id, consultation.Patient.FirstName, consultation.Patient.LastName, consultation.Patient.FolderNumber },
+                Doctor = consultation.Doctor == null ? null : new { consultation.Doctor.Id, consultation.Doctor.FirstName, consultation.Doctor.LastName, consultation.Doctor.Specialty }
+            });
         }
 
         // PUT api/consultation/{id}/status

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tp_hospital.Data;
 
@@ -10,94 +11,14 @@ using tp_hospital.Data;
 namespace tp_hospital.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    partial class HospitalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260305090822_AddPhoneNumber")]
+    partial class AddPhoneNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.24");
-
-            modelBuilder.Entity("PatientPathology", b =>
-                {
-                    b.Property<int>("PathologyId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("PathologyId", "PatientId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("PatientPathology");
-
-                    b.HasData(
-                        new
-                        {
-                            PathologyId = 1,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            PathologyId = 4,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            PathologyId = 3,
-                            PatientId = 2
-                        },
-                        new
-                        {
-                            PathologyId = 1,
-                            PatientId = 4
-                        },
-                        new
-                        {
-                            PathologyId = 2,
-                            PatientId = 4
-                        },
-                        new
-                        {
-                            PathologyId = 5,
-                            PatientId = 5
-                        },
-                        new
-                        {
-                            PathologyId = 1,
-                            PatientId = 5
-                        },
-                        new
-                        {
-                            PathologyId = 2,
-                            PatientId = 8
-                        },
-                        new
-                        {
-                            PathologyId = 3,
-                            PatientId = 10
-                        },
-                        new
-                        {
-                            PathologyId = 5,
-                            PatientId = 14
-                        },
-                        new
-                        {
-                            PathologyId = 4,
-                            PatientId = 14
-                        },
-                        new
-                        {
-                            PathologyId = 1,
-                            PatientId = 17
-                        },
-                        new
-                        {
-                            PathologyId = 5,
-                            PatientId = 17
-                        });
-                });
 
             modelBuilder.Entity("tp_hospital.Models.Consultation", b =>
                 {
@@ -396,61 +317,6 @@ namespace tp_hospital.Migrations
                     b.HasDiscriminator<string>("StaffType").HasValue("MedicalStaff");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("tp_hospital.Models.Pathology", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Pathologies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Pression arterielle chroniquement elevee",
-                            Name = "Hypertension arterielle"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Trouble metabolique du glucose",
-                            Name = "Diabete de type 2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Maladie inflammatoire chronique des voies respiratoires",
-                            Name = "Asthme"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Incapacite du coeur a pomper suffisamment de sang",
-                            Name = "Insuffisance cardiaque"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Degenerescence du cartilage articulaire",
-                            Name = "Arthrose"
-                        });
                 });
 
             modelBuilder.Entity("tp_hospital.Models.Patient", b =>
@@ -884,21 +750,6 @@ namespace tp_hospital.Migrations
                             Grade = "IADE",
                             Service = "Urgences"
                         });
-                });
-
-            modelBuilder.Entity("PatientPathology", b =>
-                {
-                    b.HasOne("tp_hospital.Models.Pathology", null)
-                        .WithMany()
-                        .HasForeignKey("PathologyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("tp_hospital.Models.Patient", null)
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("tp_hospital.Models.Consultation", b =>

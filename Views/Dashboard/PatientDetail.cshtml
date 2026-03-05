@@ -35,11 +35,39 @@
                 <div class="fw-semibold">@Model.Email</div>
             </div>
             <div class="col-sm-6 col-lg-3">
+                <div class="text-muted small">Téléphone</div>
+                <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "—" : Model.PhoneNumber)</div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
                 <div class="text-muted small">Adresse</div>
                 <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Address?.Street) ? "—" : Model.Address!.ToString())</div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Pathologies</h5>
+        <span class="badge bg-warning text-dark rounded-pill">@Model.Pathologies.Count</span>
+    </div>
+    @if (Model.Pathologies.Any())
+    {
+        <div class="card-body">
+            <div class="d-flex flex-wrap gap-2">
+                @foreach (var p in Model.Pathologies)
+                {
+                    <span class="badge bg-danger bg-opacity-75 fs-6">@p.Name</span>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-body">
+            <p class="text-muted mb-0">Aucune pathologie connue.</p>
+        </div>
+    }
 </div>
 
 <div class="card border-0 shadow-sm">

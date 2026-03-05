@@ -90,11 +90,13 @@ namespace tp_hospital.Controllers
             if (string.IsNullOrWhiteSpace(name))
                 return BadRequest(new { message = "Le parametre 'name' est requis." });
 
+            var pattern = $"%{name}%";
+
             var query = _context.Doctors
                 .AsNoTracking()
-                .Where(d => d.LastName.ToLower().Contains(name.ToLower())
-                         || d.FirstName.ToLower().Contains(name.ToLower())
-                         || d.Specialty.ToLower().Contains(name.ToLower()))
+                .Where(d => EF.Functions.Like(d.LastName, pattern)
+                         || EF.Functions.Like(d.FirstName, pattern)
+                         || EF.Functions.Like(d.Specialty, pattern))
                 .OrderBy(d => d.LastName)
                 .ThenBy(d => d.FirstName);
 

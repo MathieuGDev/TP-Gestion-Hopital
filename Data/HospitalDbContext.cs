@@ -15,6 +15,7 @@ public class HospitalDbContext : DbContext
     public DbSet<Models.Doctor>            Doctors           { get; set; }
     public DbSet<Models.Consultation>      Consultations     { get; set; }
     public DbSet<Models.MedicalStaff>      MedicalStaff      { get; set; }
+    public DbSet<Models.Pathology>         Pathologies       { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -146,6 +147,18 @@ public class HospitalDbContext : DbContext
             .IsUnique();
 
 
+        // Pathologies
+        modelBuilder.Entity<Models.Patient>()
+            .HasMany(p => p.Pathologies)
+            .WithMany(pa => pa.Patients)
+            .UsingEntity("PatientPathology",
+                l => l.HasOne(typeof(Models.Pathology)).WithMany().HasForeignKey("PathologyId"),
+                r => r.HasOne(typeof(Models.Patient)).WithMany().HasForeignKey("PatientId"));
+
+        modelBuilder.Entity<Models.Pathology>()
+            .HasIndex(p => p.Name)
+            .IsUnique();
+
         modelBuilder.Entity<Models.MedicalStaff>()
             .HasDiscriminator<string>("StaffType")
             .HasValue<Models.MedicalDoctor>("Doctor")
@@ -234,6 +247,30 @@ public class HospitalDbContext : DbContext
         );
         modelBuilder.Entity<Models.AdministrativeStaff>().HasData(
             new Models.AdministrativeStaff { Id = 6, FirstName = "Nathalie", LastName = "Petit", Function = "Secretaire medicale", HireDate = new DateTime(2017, 4, 3), Salary = 2200m }
+        );
+
+        modelBuilder.Entity<Models.Pathology>().HasData(
+            new Models.Pathology { Id = 1, Name = "Hypertension arterielle",  Description = "Pression arterielle chroniquement elevee" },
+            new Models.Pathology { Id = 2, Name = "Diabete de type 2",        Description = "Trouble metabolique du glucose" },
+            new Models.Pathology { Id = 3, Name = "Asthme",                   Description = "Maladie inflammatoire chronique des voies respiratoires" },
+            new Models.Pathology { Id = 4, Name = "Insuffisance cardiaque",   Description = "Incapacite du coeur a pomper suffisamment de sang" },
+            new Models.Pathology { Id = 5, Name = "Arthrose",                 Description = "Degenerescence du cartilage articulaire" }
+        );
+
+        modelBuilder.Entity("PatientPathology").HasData(
+            new { PatientId =  1, PathologyId = 1 },
+            new { PatientId =  1, PathologyId = 4 },
+            new { PatientId =  2, PathologyId = 3 },
+            new { PatientId =  4, PathologyId = 1 },
+            new { PatientId =  4, PathologyId = 2 },
+            new { PatientId =  5, PathologyId = 5 },
+            new { PatientId =  5, PathologyId = 1 },
+            new { PatientId =  8, PathologyId = 2 },
+            new { PatientId = 10, PathologyId = 3 },
+            new { PatientId = 14, PathologyId = 5 },
+            new { PatientId = 14, PathologyId = 4 },
+            new { PatientId = 17, PathologyId = 1 },
+            new { PatientId = 17, PathologyId = 5 }
         );
     }
 }
